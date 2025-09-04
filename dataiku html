@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resource Booking App</title>
+    <!-- Flatpickr for date selection -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .hidden { display: none; }
+        .container { max-width: 800px; margin: auto; }
+        .login-box, .audit-box, .resources-box {
+            border: 1px solid #ccc; padding: 20px; margin-top: 20px;
+            border-radius: 8px; background: #f9f9f9;
+        }
+        .nav-list li { margin-bottom: 10px; }
+        .btn { padding: 6px 12px; margin: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-box">
+        <h2>Login</h2>
+        <div>
+            <label>Username</label><br>
+            <input type="text" id="username" placeholder="Username"><br><br>
+            <label>Password</label><br>
+            <input type="password" id="password" placeholder="Password"><br><br>
+            <button class="btn" onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- INDEX PAGE (list of audits) -->
+    <div id="indexPage" class="audit-box hidden">
+        <h2>Select an Audit</h2>
+        <ul id="auditList" class="nav-list"></ul>
+        <button class="btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- VIEW RESOURCES PAGE -->
+    <div id="resourcesPage" class="resources-box hidden">
+        <h2>Audit Resources</h2>
+        <p id="selectedAudit"></p>
+        <div id="employeeList"></div>
+        <button class="btn" onclick="backToIndex()">Back</button>
+    </div>
+
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    // ---- LOGIN LOGIC ----
+    function login() {
+        const u = document.getElementById("username").value;
+        const p = document.getElementById("password").value;
+        if (u === "admin" && p === "password") {
+            document.getElementById("loginPage").classList.add("hidden");
+            document.getElementById("indexPage").classList.remove("hidden");
+            loadAudits();
+        } else {
+            alert("Invalid login. Try admin/password for demo.");
+        }
+    }
+
+    function logout() {
+        document.getElementById("indexPage").classList.add("hidden");
+        document.getElementById("loginPage").classList.remove("hidden");
+    }
+
+    // ---- AUDIT LIST ----
+    function loadAudits() {
+        // Replace this with backend fetch later
+        const audits = [
+            {number: "2025-US-AU3003043", title: "Business Continuity Management, US"},
+            {number: "2025-US-AU3002923", title: "Cybersecurity Audit, US"}
+        ];
+        const ul = document.getElementById("auditList");
+        ul.innerHTML = "";
+        audits.forEach(a => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="#" onclick="viewResources('${a.number}','${a.title}')">${a.number} - ${a.title}</a>`;
+            ul.appendChild(li);
+        });
+    }
+
+    // ---- RESOURCES ----
+    function viewResources(auditNum, auditTitle) {
+        document.getElementById("indexPage").classList.add("hidden");
+        document.getElementById("resourcesPage").classList.remove("hidden");
+        document.getElementById("selectedAudit").innerHTML =
+            `<b>${auditNum}</b> - ${auditTitle}`;
+
+        // Dummy employees (replace with backend call)
+        const employees = [
+            {psid: "1563311", name: "Fong, King Yin", role: "Team Manager"},
+            {psid: "1350153", name: "Wu, Yu Fei", role: "Auditor"}
+        ];
+        const list = employees.map(e => 
+            `<p>${e.name} (${e.role}) - PSID: ${e.psid}</p>`
+        ).join("");
+        document.getElementById("employeeList").innerHTML = list;
+    }
+
+    function backToIndex() {
+        document.getElementById("resourcesPage").classList.add("hidden");
+        document.getElementById("indexPage").classList.remove("hidden");
+    }
+</script>
+</body>
+</html>
