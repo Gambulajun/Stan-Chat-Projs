@@ -1,0 +1,189 @@
+ <!--
+
+
+
+
+
+{% extends 'base.html' %}
+
+{% block main_content %}
+
+<h2 class="mb-3">Audit {{ audit_number }} - {{ audit_title }}</h2>
+     Audit Details Section -->
+    <div class="audit-details">
+        <table class="table table-bordered table-fixed">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Scheduling Phase</th>
+                    <th>Audit Plan Year</th>
+                    <th>Audit Principal Risk Types</th>
+                    <th>Audit Risk Radar Themes</th>
+                    <th>Primary GIA Audit Owner Team</th>
+                    <th>Planned Audit Notification Date</th>
+                    <th>Planned Planning Start Date</th>
+                    <th>Planned Planning End Date</th>
+                    <th>Planned Fieldwork Start Date</th>
+                    <th>Planned Fieldwork End Date</th>
+                    <th>Planned Reporting Start Date</th>
+                    <th>Planned Report Issuance Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for audit in audits %}
+                    {% if audit['audit_number'] == audit_number %}
+                <tr>
+                        <!--
+                    <td>{{ audit['SchedulingPhase'] }}</td>
+                    <td>{{ audit['Audit Plan Year'] }}</td>
+                    <td>{{ audit['Audit Principal Risk Types'] }}</td>
+                    <td>{{ audit['Audit Risk Radar Themes'] }}</td>
+                    <td>{{ audit['Primary GIA Audit Owner Team'] }}</td>
+                    <td>{{ audit['Planned Audit Notification Date'] }}</td>
+                    <td>{{ audit['Planned Planning Start Date'] }}</td>
+                    <td>{{ audit['Planned Planning End Date'] }}</td>
+                    <td>{{ audit['Planned Fieldwork Start Date'] }}</td>
+                    <td>{{ audit['Planned Fieldwork End Date'] }}</td>
+                    <td>{{ audit['Planned Reporting Start Date'] }}</td>
+                    <td>{{ audit['Planned Report Issuance Date'] }}</td>    -->
+
+
+                    <td>{{ audit['SchedulingPhase'] }}</td>
+                    <td>{{ audit['audit_plan_year'] }}</td>
+                    <td>{{ audit['audit_principal_risk_types'] }}</td>
+                    <td>{{ audit['audit_risk_radar_themes'] }}</td>
+                    <td>{{ audit['primary_gia_audit_owner_team'] }}</td>
+                    <td>{{ audit['planned_audit_notification_date'] }}</td>
+                    <td>{{ audit['planned_planning_start_date'] }}</td>
+                    <td>{{ audit['planned_planning_end_date'] }}</td>
+                    <td>{{ audit['planned_fieldwork_start_date'] }}</td>
+                    <td>{{ audit['planned_fieldwork_end_date'] }}</td>
+                    <td>{{ audit['planned_reporting_start_date'] }}</td>
+                    <td>{{ audit['planned_report_issuance_date'] }}</td>
+
+                </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<div class="content-wrapper">
+    <form method="post">
+        <table class="table table-bordered table-fixed">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Select</th>
+                    <th>PSID</th>
+                    <th>Full Name</th>
+                    <th>Job Title</th>
+                    <th>Team Name</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Availability</th>
+                    <th>Similarity Score</th>
+                    <th>Select Days</th>
+                    <th>Select Phase</th>
+                    <th>Select Role</th>
+                    <th>Utilization %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr {% if emp.selected %}class="greyed-out"{% endif %}>
+                    <td>
+                        <input type="checkbox" name="selected_employees" value="{{ emp['PSID'] }}" {% if emp.selected %}disabled{% endif %} class="large-checkbox">
+                    </td>
+                    
+                    <td>{{ emp['PSID'] }}</td>
+                    <td>{{ emp['FullName'] }}</td>
+                    <td>{{ emp['JobTitle'] }}</td>
+                    <td>{{ emp['AuditTeamName'] }}</td>
+                    <td>{{ emp['LocationCity'] }}</td>
+                    <td>{{ emp['CountryName'] }}</td>
+                    <td>{{ emp['AvailabilityFrom'] }} TO {{ emp['AvailabilityTo'] }} - 
+                        {{ emp['available_days'] }} days -
+                        {{ emp['Audit Phase Availability'] }}
+                    </td>
+                    <td>{{ (emp['WeightedSimilarityScore'] * 100) | round(2) }}%</td>
+                    <td>
+                        <input type="text" name="available_days_{{ emp['PSID'] }}"
+                               {% if emp.selected %}readonly{% endif %} style="width: 75px;">
+                    </td>
+                    <td>
+                        <input type="text" name="phase_{{ emp['PSID'] }}"
+                               {% if emp.selected %}readonly{% endif %} style="width: 75px;">
+                    </td>
+                    <td>
+                        <select name="role_{{ emp['PSID'] }}" class="form-control" {% if emp.selected %}disabled{% endif %}>
+                            <option value="" >Select Role</option>
+                            <option value="Team Manager">Team Manager</option>
+                            <option value="Team Leader">Team Leader</option>
+                            <option value="Team Member">Team Member</option>
+                        </select>
+                    </td>
+                    <td>
+                        {{ emp['Utilization Percent'] }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Combined Buttons and Pagination Controls -->
+        <div class="d-flex align-items-center justify-content-between">
+            <!-- Left Side: Submit Button -->
+            <div>
+                <button type="submit" name="submit" class="btn btn-success">Submit</button>
+            </div>
+            <!-- Center: Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination mb-0">
+                    <!-- Previous Page Link -->
+                    {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('view_resources', audit_number=audit_number, page=page-1) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <!-- Page Number Links -->
+                    {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('view_resources', audit_number=audit_number, page=p) }}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+
+                    <!-- Next Page Link -->
+                    {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('view_resources', audit_number=audit_number, page=page+1) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <!-- Right Side: Download and Clear Buttons -->
+            <div>
+                
+                selected_emp_ids = set()
+            </div>
+           
+
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+

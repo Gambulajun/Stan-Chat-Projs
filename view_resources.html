@@ -80,11 +80,11 @@
                     <th>Country</th>
                     <th>Availability</th>
                     <th>Similarity Score</th>
-                    <th>Select Days</th>
+                    <!--<th>Select Days</th>-->
                     <th>Select Phase</th>
                     <th>Select Role</th>
-                    <th>Utilization %</th>
-                    <th>Percent Free</th>
+                    <!--<th>Utilization %</th>-->
+                    <!--<th>Percent Free</th>-->
                     <th>Book From</th>
                     <th>Book To</th>
                     <th>Booked Periods</th>
@@ -109,10 +109,10 @@
                         {{ emp['Audit Phase Availability'] }}
                     </td>
                     <td>{{ (emp['WeightedSimilarityScore'] * 100) | round(2) }}%</td>
-                    <td>
+                    <!--<td>
                         <input type="text" name="available_days_{{ emp['PSID'] }}"
                                {% if emp.selected %}readonly{% endif %} style="width: 75px;">
-                    </td>
+                    </td>-->
                     <td>
                         <input type="text" name="phase_{{ emp['PSID'] }}"
                                {% if emp.selected %}readonly{% endif %} style="width: 75px;">
@@ -125,12 +125,12 @@
                             <option value="Team Member">Team Member</option>
                         </select>
                     </td>
-                    <td>
+                <!--<td>
                         {{ emp['Utilization Percent'] }}
-                    </td>
-                    <td>
+                    </td>-->
+                    <!--<td>
                         {{ emp['PercentFree'] }}%
-                    </td>
+                    </td>-->
                     <td>
                         <input type="text" name="booked_from_{{ emp['PSID'] }}" class="datepicker" placeholder="Start date"
                                {% if emp.selected %}readonly{% endif %} style="width: 110px;">

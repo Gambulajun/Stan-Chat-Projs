@@ -1,0 +1,275 @@
+/* Custom styles for the application */
+
+body {
+    background-color: #F5F5F5; /* Light gray background for better contrast */
+}
+
+.banner {
+    background-color: #00A1E0; /* Standard Chartered secondary blue */
+    padding: 10px 0;
+}
+
+.banner .logo {
+    max-height: 50px;
+}
+
+.banner .logo-container {
+    flex-shrink: 0;
+}
+
+.banner .title-container {
+    flex-grow: 1;
+}
+
+.banner .logout-container {
+    flex-shrink: 0;
+}
+
+.banner .banner-title {
+    color: white;
+    margin: 0;
+    font-size: 28px;
+    text-align: center;
+}
+
+.banner .btn-outline-light {
+    border-color: white;
+    color: white;
+}
+
+.banner .btn-outline-light:hover {
+    background-color: white;
+    color: #00A1E0;
+}
+
+.banner .fas {
+    color: white;
+    margin-right: 10px;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Adjusted main content area */
+main.with-sidebar {
+    margin-left: 220px; /* Width of the sidebar */
+    padding: 20px 20px 0 20px;
+}
+
+main.without-sidebar {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 800px;
+}
+
+@media (max-width: 767.98px) {
+    main.with-sidebar {
+        margin-left: 0;
+    }
+}
+
+.login-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-top: 50px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Remove extra spacing above content */
+.content-wrapper {
+    padding-top: 0;
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+    padding: 10px; /* Optional: Add padding for better spacing */
+}
+
+h2 {
+    margin-top: 0;
+}
+
+/* Sidebar adjustments */
+.sidebar {
+    position: fixed;
+    top: 70px; /* Adjust based on banner height */
+    bottom: 0;
+    left: 0;
+    width: 220px;
+    padding-top: 20px;
+    background-color: #E0E0E0; /* Light gray for better visibility */
+    color: #333;
+}
+
+.sidebar .form-control {
+    margin-bottom: 20px;
+}
+
+.sidebar .sidebar-sticky {
+    padding: 10px;
+}
+
+.btn-primary {
+    background-color: #00693C;
+    border-color: #00693C;
+}
+
+.btn-primary:hover {
+    background-color: #005A33;
+    border-color: #005A33;
+}
+
+.btn-success {
+    background-color: #78BE20; /* Accent light green */
+    border-color: #78BE20;
+}
+
+.btn-success:hover {
+    background-color: #67A71C;
+    border-color: #67A71C;
+}
+
+.btn-info {
+    background-color: #00A1E0;
+    border-color: #00A1E0;
+}
+
+.btn-info:hover {
+    background-color: #0090C1;
+    border-color: #0090C1;
+}
+
+.table thead {
+    background-color: #00693C;
+    color: white;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #E8F5E9; /* Light green background for odd rows */
+}
+
+.form-control {
+    border-radius: 4px;
+}
+
+/* Adjustments for buttons */
+.form-group .btn {
+    margin-right: 10px;
+}
+
+.mt-3 .btn {
+    margin-right: 10px;
+}
+
+/* Pagination Styles */
+.d-flex.align-items-center.justify-content-between {
+    margin-bottom: 20px;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.pagination .page-item .page-link {
+    color: #00693C;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #00693C;
+    border-color: #00693C;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+}
+
+/* Adjustments for buttons inside the combined div */
+.d-flex > div > .btn {
+    margin-right: 5px;
+}
+
+/* Style for greyed-out rows */
+.greyed-out {
+    background-color: #e0e0e0;
+    color: #888;
+}
+
+.greyed-out td, .greyed-out th {
+    color: #888;
+}
+.red {
+    background-color: red;
+    color: white;
+}
+
+.amber {
+    background-color: orange;
+    color: white;
+}
+
+.green {
+    background-color: green;
+    color: white;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.form-container {
+    height: 400px; /* Set the desired height for the form container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+    padding: 10px; /* Optional: Add padding for better spacing */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    word-wrap: break-word; /* Ensures content wraps within the cell */
+}
+
+
+
+.large-checkbox {
+    width: 20px;
+    height: 20px;
+    transform: scale(1.5); /* Adjust the scale as needed */
+    -webkit-transform: scale(1.5); /* For Safari */
+    -moz-transform: scale(1.5); /* For Firefox */
+    -ms-transform: scale(1.5); /* For IE */
+    -o-transform: scale(1.5); /* For Opera */
+    margin: 5px; /* Optional: Adjust margin for better alignment */
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content label {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
