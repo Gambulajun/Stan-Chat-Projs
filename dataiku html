@@ -110,3 +110,121 @@
 </script>
 </body>
 </html>
+
+#backend
+from flask import request, jsonify
+import dataiku, pandas as pd, io
+from datetime import datetime
+
+# --- Config ---
+OUTPUT_DATASET = "output_csv"       # dataset you uploaded
+BOOKINGS_FOLDER = "bookings_folder" # managed folder you created
+BOOKINGS_FILE = "bookings.csv"
+
+output_ds = dataiku.Dataset(OUTPUT_DATASET)
+bookings_folder = dataiku.Folder(BOOKINGS_FOLDER)
+
+# --- Helpers ---
+def load_bookings():
+    try:
+        with bookings_folder.get_download_stream(BOOKINGS_FILE) as stream:
+            return pd.read_csv(stream, parse_dates=['BookedFrom','BookedTo'])
+    except:
+        cols = ['audit_number','audit_title','PSID','FullName','Role','Phase','BookedFrom','BookedTo','Timestamp']
+        return pd.DataFrame(columns=cols)
+
+def save_bookings(df):
+    buf = io.StringIO()
+    df.to_csv(buf, index=False)
+    buf.seek(0)
+    bookings_folder.upload_stream(BOOKINGS_FILE, buf)
+
+# --- API Endpoints ---
+
+@app.route("/get_audits")
+def get_audits():
+    df = output_ds.get_dataframe()
+    audits = df[['audit_number','audit_title']].drop_duplicates()
+    return jsonify(audits.to_dict(orient="records"))
+
+@app.route("/get_employees/<audit_number>")
+def get_employees(audit_number):
+    df = output_ds.get_dataframe()
+    subset = df[df['audit_number'] == audit_number]
+    employees = subset[['PSID','FullName','JobTitle','RecommendedRole']].drop_duplicates()
+    return jsonify(employees.to_dict(orient="records"))
+
+@app.route("/add_booking", methods=["POST"])
+def add_booking():
+    data = request.get_json()
+    df = load_bookings()
+    new_row = {
+        'audit_number': data['audit_number'],
+        'audit_title': data.get('audit_title', ''),
+        'PSID': data['PSID'],
+        'FullName': data['FullName'],
+        'Role': data.get('Role',''),
+        'Phase': data.get('Phase',''),
+        'BookedFrom': data['BookedFrom'],
+        'BookedTo': data['BookedTo'],
+        'Timestamp': datetime.now().isoformat()
+    }
+    df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+    save_bookings(df)
+    return jsonify({"status":"ok","message":"Booking saved"})
+
+#Load HTML
+function loadAudits() {
+    fetch("/get_audits")
+    .then(r => r.json())
+    .then(audits => {
+        const ul = document.getElementById("auditList");
+        ul.innerHTML = "";
+        audits.forEach(a => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="#" onclick="event.preventDefault(); viewResources('${a.audit_number}','${a.audit_title}')">${a.audit_number} - ${a.audit_title}</a>`;
+            ul.appendChild(li);
+        });
+    });
+}
+
+
+function viewResources(auditNum, auditTitle) {
+    document.getElementById("indexPage").classList.add("hidden");
+    document.getElementById("resourcesPage").classList.remove("hidden");
+    document.getElementById("selectedAudit").innerHTML = `<b>${auditNum}</b> - ${auditTitle}`;
+
+    fetch(`/get_employees/${auditNum}`)
+    .then(r => r.json())
+    .then(employees => {
+        const list = employees.map(e => 
+            `<p>${e.FullName} (${e.JobTitle}) - PSID: ${e.PSID} - Role: ${e.RecommendedRole}
+             <button onclick="bookEmployee('${auditNum}','${e.PSID}','${e.FullName}')">Book</button></p>`
+        ).join("");
+        document.getElementById("employeeList").innerHTML = list;
+    });
+}
+
+
+function bookEmployee(auditNum, psid, fullName) {
+    const booking = {
+        audit_number: auditNum,
+        PSID: psid,
+        FullName: fullName,
+        Role: "Team Member",
+        BookedFrom: "2025-09-10",
+        BookedTo: "2025-09-12"
+    };
+
+    fetch("/add_booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(booking)
+    })
+    .then(r => r.json())
+    .then(res => {
+        alert(res.message);
+    });
+}
+
+
